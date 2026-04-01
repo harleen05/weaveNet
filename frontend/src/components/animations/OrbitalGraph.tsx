@@ -19,7 +19,7 @@ export default function OrbitalGraph({ skills }: OrbitalGraphProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [hoveredSkill, setHoveredSkill] = useState<SkillNode | null>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const animationRef = useRef<number>()
+  const animationRef = useRef<number | null>(null)
   const timeRef = useRef(0)
 
   useEffect(() => {
