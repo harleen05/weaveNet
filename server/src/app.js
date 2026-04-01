@@ -15,15 +15,20 @@ app.use(express.json());
 app.use("/api", matchRoutes);
 
 async function start() {
-  await testConnection();
+  try {
+    await testConnection();
 
-  // Only seed if graph is empty
-  const records = await runQuery("MATCH (s:Skill) RETURN count(s) AS count");
-  const count = records[0].get("count").toNumber();
-  if (count === 0) {
-    await seedSkillGraph();
-  } else {
-    console.log(`✅ Skill graph already has ${count} skills in Neo4j`);
+    // Only seed if graph is empty
+    const records = await runQuery("MATCH (s:Skill) RETURN count(s) AS count");
+    const count = records[0].get("count").toNumber();
+    if (count === 0) {
+      await seedSkillGraph();
+    } else {
+      console.log(`✅ Skill graph already has ${count} skills in Neo4j`);
+    }
+  } catch (err) {
+    console.warn("⚠️  Neo4j not available - some features may be limited");
+    console.warn("To enable full features, install and start Neo4j locally");
   }
 
   app.listen(PORT, () => {
