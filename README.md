@@ -1,19 +1,11 @@
 # 🧠 WeaveIQ
 
+Deployed Link: https://weave-net-two.vercel.app/
+
 > **An AI-powered talent intelligence engine that goes beyond resumes to uncover hidden potential using skill relationships and explainable matching.**
 
 ---
 
-## 🚩 Problem
-
-Organizations often overlook capable internal talent because:
-
-* Hiring relies heavily on **resume keywords**
-* Employees’ **real skills remain hidden**
-* Near-fit candidates are **rejected instead of upskilled**
-* Systems lack **transparency in decision-making**
-
----
 
 ## 💡 Solution
 
@@ -129,13 +121,5 @@ npm run dev
 
 ---
 
-## 🌟 Why This Project Stands Out
-
-Unlike traditional systems, WeaveIQ:
-
-* Goes beyond keyword matching
-* Recognizes **trainable talent**
-* Maintains **transparency**
-* Uses **intelligent relationships between skills**
 
 ---
