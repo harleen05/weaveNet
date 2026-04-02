@@ -62,8 +62,8 @@ Explainable Output
 ## 🧰 Tech Stack
 
 * **Backend:** Node.js, Express
-* **AI/ML (Optional):** Hugging Face Embeddings
-* **Graph Logic:** In-memory skill graph (Neo4j-ready)
+* **AI/ML :** Hugging Face Embeddings
+* **Graph Logic:** Neo4j-ready
 * **APIs:** RESTful endpoints
 
 ---
