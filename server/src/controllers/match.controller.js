@@ -2,7 +2,7 @@
 import { findAdjacentSkills } from "../services/adjacencyEngine.js";
 import { matchSkills } from "../services/skillMatcher.js";
 import { calculateScore } from "../services/scoringEngine.js";
-import { generateExplanation } from "../services/explanationEngine.js";
+import { generateDetailedAnalysis } from "../services/advancedAnalysis.js";
 import { fetchGithubProfile } from "../services/githubFetcher.js";
 import { getSemanticSimilarity } from "../services/embeddingService.js";
 import { validateMatchInput } from "../utils/validateInput.js";
@@ -41,12 +41,36 @@ export const matchRole = async (req, res) => {
 
     const candidateSkills = extractSkillNames(fullText);
     const { matched, missing } = matchSkills(candidateSkills, role_skills);
-    const adjacent = await findAdjacentSkills(candidateSkills, missing);
+    
+    let adjacent = [];
+    try {
+      adjacent = await findAdjacentSkills(candidateSkills, missing);
+    } catch (err) {
+      console.warn("Neo4j adjacency search failed, using empty array:", err.message);
+    }
+    
     const score = calculateScore(matched, adjacent, role_skills);
-    const explanation = generateExplanation(matched, adjacent, missing);
+    
+    // Generate advanced detailed analysis
+    const detailedAnalysis = generateDetailedAnalysis(
+      matched, 
+      adjacent, 
+      missing, 
+      candidateSkills, 
+      role_skills, 
+      githubData
+    );
+    
+    // Use the detailed explanation
+    const explanation = detailedAnalysis.executiveSummary + "\n\n" + 
+      detailedAnalysis.skillBreakdown.coreStrengths.map(s => `✓ ${s.skill} (${s.marketDemand} demand)`).join("\n");
 
-    // Optional semantic similarity via embeddings
-    const semantic_similarity = await getSemanticSimilarity(candidateSkills, role_skills);
+    let semantic_similarity = 0;
+    try {
+      semantic_similarity = await getSemanticSimilarity(candidateSkills, role_skills);
+    } catch (err) {
+      console.warn("Semantic similarity calculation failed:", err.message);
+    }
 
     res.json({
       score,
@@ -57,6 +81,7 @@ export const matchRole = async (req, res) => {
       adjacent_match_percentage: Math.round((adjacent.length / role_skills.length) * 100),
       semantic_similarity,
       explanation,
+      detailed_analysis: detailedAnalysis,
       candidate_skills: candidateSkills,
       ...(githubData && {
         github: {
